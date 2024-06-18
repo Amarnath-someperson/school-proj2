@@ -16,7 +16,7 @@ app = Flask(__name__)
 # secret key used for production must be a good one.
 app.secret_key = 'cde18620caeb39db4dff9c291d4fb1c2b2f0e32f5df691f69b2dee1ad47c4e7d'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
+# app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 
 db.init_app(app)
 bcrypt = Bcrypt(app)
