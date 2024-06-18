@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multiple logins</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='dist/css/output.css')}}"
+    />
+  </head>
+  <body class="bg-slate-900">
+    <div
+      class="max-w-3xl text-orange-400 m-auto mt-6 min-w-3xl flex flex-col justify-center"
+    >
+      <h1 class="text-5xl font-extrabold font-sans p-2 m-3 ml-0 pl-0">
+        Multiple login attempts detected
+      </h1>
+      <p>
+        You are already logged in to an account, and as such you cannot log in
+        to another without logging out of this one. Click the button below if
+        you want to log out of this account.
+      </p>
+      <form action="/logout" method="post">
+        <button class="m-3 p-2 bg-slate-900 border-orange-400 border-4">
+          Logout
+        </button>
+      </form>
+    </div>
+  </body>
+</html>
