@@ -13,25 +13,31 @@ import pandas as pd
 db = SQLAlchemy()
 
 app = Flask(__name__)
-# secret key used for production must be a good one.
+# secret key used for production must be a good one. I will change it in prod.
 app.secret_key = 'cde18620caeb39db4dff9c291d4fb1c2b2f0e32f5df691f69b2dee1ad47c4e7d'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///student.db'
 # app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'
 
 db.init_app(app)
 bcrypt = Bcrypt(app)
-
-admin = Admin(name='microblog', template_mode='bootstrap3')
 
 
 class AdminPage(BaseView):
     def is_accessible(self):
         return is_admin()
 
-    @expose('/admin', methods=('GET', 'POST'))
+    @expose('/', methods=('GET', 'POST'))
     def index(self):
-        # do it
-        return self.render("admin/index.html")
+        if self.is_accessible():
+            return self.render("admin/index.html")
+        return render_template(url_for('admin_login'))
+
+
+admin = Admin(index_view=AdminPage(name='ADMINPAGE',
+              url='/admin'))
+
+
+admin.init_app(app)
 
 
 class LoginForm(FlaskForm):
@@ -68,16 +74,20 @@ def admin_login():
             user_table = pd.read_sql_table(
                 table_name="user", con='sqlite:///users.db')
             if (username in user_table.values):
-                if bcrypt.check_password_hash(pwhash, form.password.data):
+                saltedpw = ''
+                for i in user_table.values:
+                    if i[1] == username:
+                        saltedpw = i[2]
+                if bcrypt.check_password_hash(saltedpw[2:len(saltedpw)-1], form.password.data):
                     session['logged_in'] = True
                     session['username'] = username
                     print(
                         f'\033[0;43m[LOGIN SUCCESSFUL] user logged in successfully\033[0;0m')
-                    return redirect(url_for('homepage'))
+                    return redirect('/admin')
             else:
                 print('\033[0;41m[NOT FOUND] User was not found.\033[0;0m')
         else:
-            print('\033[0;41m[VALIDATION ERROR] Form was not validated.\033[0;0m')
+            print('\033[0;41m[INVALID FORM] Form was not validated.\033[0;0m')
 
         return render_template('login.html', form=form), 200
     return render_template('logged_in.html'), 200
