@@ -13,7 +13,7 @@ import pandas as pd
 db = SQLAlchemy()
 
 app = Flask(__name__)
-# secret key used for production must be a good one. I will change it in prod.
+# secret key used for production must be a good one. TODO: CHANGE IN PROD.
 app.secret_key = 'cde18620caeb39db4dff9c291d4fb1c2b2f0e32f5df691f69b2dee1ad47c4e7d'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///student.db'
 # app.config['FLASK_ADMIN_SWATCH'] = 'cerulean'

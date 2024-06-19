@@ -23,7 +23,7 @@ password = bcrypt.hashpw(
 
 try:
     cursor.execute(
-        rf"""INSERT INTO user (username, password) VALUES ("{username}", "]={password}")""")
+        rf"""INSERT INTO user (username, password) VALUES ("{username}", "{password}")""")
 
     print('\033[0;35m[REGISTER] admin user registered into database.\033[0;0m')
 except Exception as e:
