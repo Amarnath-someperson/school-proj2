@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, redirect
 from flask import session, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_admin import Admin, BaseView, expose
+from flask_admin import Admin, AdminIndexView, expose
 # if need be to use this later:
 # from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
@@ -22,7 +22,7 @@ db.init_app(app)
 bcrypt = Bcrypt(app)
 
 
-class AdminPage(BaseView):
+class AdminPage(AdminIndexView):
     def is_accessible(self):
         return is_admin()
 
@@ -58,6 +58,7 @@ def homepage():
 
 @app.route('/login', methods=['GET', 'POST'])
 def admin_login():
+    errors = None
     try:
         session['logged_in']
     except:
@@ -84,6 +85,8 @@ def admin_login():
                     print(
                         f'\033[0;43m[LOGIN SUCCESSFUL] user logged in successfully\033[0;0m')
                     return redirect('/admin')
+                else:
+                    errors = "wrong password"
             else:
                 print('\033[0;41m[NOT FOUND] User was not found.\033[0;0m')
         else:
@@ -102,7 +105,7 @@ def logout():
 
 def is_admin():
     try:
-        if session['logged_in'] == True:
+        if session['logged_in'] is True:
             return True
     except:
         return False
