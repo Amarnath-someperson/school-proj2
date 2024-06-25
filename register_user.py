@@ -29,11 +29,13 @@ try:
 except Exception as e:
     print(e)
 
+
+db.commit()
+db.close()
+
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # IF YOU EVER NEED TO CHECK THE DATABASE
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # cursor.execute("SELECT * FROM user")
 # print(cursor.fetchall())
-
-db.commit()
-db.close()
