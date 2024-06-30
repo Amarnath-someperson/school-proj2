@@ -15,14 +15,16 @@
       class="max-w-3xl text-orange-400 m-auto mt-6 min-w-3xl flex flex-col justify-center"
     >
       <h1 class="text-5xl font-extrabold font-sans p-2 m-3 ml-0 pl-0">
-        Access Denied
+        Are you sure?
       </h1>
-      <p>You are not allowed to access this page.</p>
-      <form action="/logout" method="post">
-        <button class="m-3 p-2 bg-slate-900 border-orange-400 border-4">
-          Logout
-        </button>
-      </form>
+      <p>
+        This page contains sensitive information that, if accidentally, or
+        otherwise, erased, will need to be rewritten,
+        <strong>from scratch</strong>. Are you sure you want to access it?
+      </p>
+      <form action ="/students" method = "post">
+        <label>Passkey</label><input type="text" name="passkey"></input>
+      <form>
     </div>
   </body>
 </html>

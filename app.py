@@ -47,7 +47,21 @@ class AdminPage(AdminIndexView):
     @expose('/', methods=('GET', 'POST'))
     def index(self):
         if self.is_accessible():
-            return self.render("admin/index.html")
+            if request.method == 'POST':
+                errors = None
+                file = request.files['csv']
+                if file.mimetype != 'text/csv':
+                    errors = 'The uploaded file was not a csv file. Aborted saving.'
+                else:
+                    path = f'./records/csv/{file.filename}'
+                    file.save(path)
+                    if os.path.exists(path):
+                        errors = '''The file already exists in storage. 
+                            Rename the file to be uploaded and try again. 
+                            If you wish to delete the existing file, request its removal at <url>.'''
+                return self.render("admin/index.html", errors=errors, user=session['username'])
+
+            return self.render("admin/index.html", user=session['username'])
 
 
 admin = Admin(index_view=AdminPage(name='Home',

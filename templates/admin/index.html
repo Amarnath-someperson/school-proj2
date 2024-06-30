@@ -1,5 +1,34 @@
 {%extends 'admin/master.html'%} {% block body %}
 <h1>Admin Dashboard</h1>
-<p>This is the homepage for the admin dashboard.</p>
-<form action="/logout"><button class="btn btn-primary">Logout</button></form>
+<p class="lead">
+  Hello, <strong>{{user}}</strong>. This is your homepage. Please remember to
+  log out of your account after use. Your browser will <strong>NOT</strong> log
+  you out when you close it.
+</p>
+<form action="/logout"><button class="btn btn-danger">Logout</button></form>
+<h2>CSV File Upload</h2>
+<p>
+  CSV files are for class marklists, they must follow the below given format.
+<ol>
+    <li>The name of the file must be in the format <code>&lt;class&gt;&lt;division&gt;&lt;year&gt;&lt;exam type&gt;.csv</code>.
+      The <code>exam type</code> can be <code>pre</code>, <code>mid</code>, 
+      <code>post</code>, <code>ann</code> or <code>ct&lt;number&gt;</code>, 
+      which refer to the pre-mid exam, mid-term exam, post-mid exam, annual
+      exam and the cyclic test respectively, where <code>number</code> can be 1, 2, 3... . 
+      For example, the name of the file for the class XI A mark list of the annual 
+      exam for the academic year 2023-24 can be <code>11A2324ann.csv</code>.
+      Note that for classes below <code>10</code>, use <code>01, 02, 03</code>etc.</li>
+    <li>The structure of the csv much be as such: <!--LIST THE TABLE HERE--></li>
+</ol>
+</p>
+{% if errors %}
+<div class="alert alert-danger">
+  <strong>{{errors}}</strong>
+</div>
+{% endif %}
+<form action="/admin" method="post" enctype="multipart/form-data">
+  <!-- refer https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4 (encoding)-->
+  <input type="file" name="csv" />
+  <button class="btn btn-info">Upload</button>
+</form>
 {% endblock %}

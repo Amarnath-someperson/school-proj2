@@ -21,8 +21,10 @@
         <p class="m-3 ml-0">This is the login page for administrators of the server.</p>
         <form action = '' method = "post">
             {{form.hidden_tag()}}
-            <label for="username" class = "m-2 p-2 ml-0 pl-0 font-mono font-semibold">Username</label><input class =" m-3 p-2 bg-slate-900 border-orange-400 border-4" type="text" name="username" placeholder="username..." ></input></br>
-            <label for="password" class = "m-2 p-2 ml-0 pl-0 font-mono font-semibold">Password</label><input class =" m-3 p-2 bg-slate-900 border-orange-400 border-4" type="password" name="password" placeholder="password..."></input></br></dl>
+            <label for="username" class = "m-2 p-2 ml-0 pl-0 font-mono font-semibold">Username</label>
+            <input class =" m-3 p-2 bg-slate-900 border-orange-400 border-4" type="text" name="username" placeholder="username..." ></input></br>
+            <label for="password" class = "m-2 p-2 ml-0 pl-0 font-mono font-semibold">Password</label>
+            <input class =" m-3 p-2 bg-slate-900 border-orange-400 border-4" type="password" name="password" placeholder="password..."></input></br>
             {{form.submit}}
         </form>
       </div>
