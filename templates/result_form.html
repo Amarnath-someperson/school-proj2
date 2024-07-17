@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scorecard</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static',filename='dist/css/output.css')}}"
+    />
+  </head>
+  <body class="bg-slate-900">
+    <div
+      class="max-w-3xl text-orange-400 m-auto mt-6 min-w-3xl flex flex-col justify-center"
+    >
+      <div>
+        <h1 class="text-5xl font-extrabold font-sans p-2 m-3 ml-0 pl-0">
+            Get your scorecard
+        </h1>
+        <form action = '' method = "post">
+            <label for="username" class = "m-2 p-2 ml-0 pl-0 font-mono font-semibold">Admission No.</label>
+            <input class =" m-3 p-2 bg-slate-900 border-orange-400 border-4" type="text" name="admn_no" placeholder="admn. no..." ></input></br>
+            <button class="m-3 p-2 bg-slate-900 border-orange-400 border-4">
+              Search
+            </button>
+        </form>
+      </div>
+
+      <footer class="border-t-orange-400 border-2 border-slate-900 p-4 m-6 ml-0 mr-0">
+        <p>
+          Amarnath K<br />
+          <a href="mailto:amarnathkunnummal112@gmail.com"
+            >amarnathkunnummal112(at)gmail.com</a
+          >
+        </p>
+      </footer>
+    </div>
+</html>

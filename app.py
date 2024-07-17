@@ -11,6 +11,8 @@ from wtforms.validators import InputRequired, Length
 from flask_bcrypt import Bcrypt
 import pandas as pd
 from models import Students
+import csvtools
+import docxgen
 
 db = SQLAlchemy(model_class=Students)
 
@@ -26,7 +28,7 @@ db.init_app(app)
 bcrypt = Bcrypt(app)
 
 
-def is_admin():
+def is_admin() -> bool:
     """Checks if the user is an adminuser.
 
     Returns:
@@ -51,7 +53,7 @@ class AdminPage(AdminIndexView):
                 errors = None
                 file = request.files['csv']
                 if file.mimetype != 'text/csv':
-                    errors = 'The uploaded file was not a csv file. Aborted saving.'
+                    errors = 'The file was not of csv type. Aborted saving.'
                 else:
                     path = f'./records/csv/{file.filename}'
                     file.save(path)
@@ -62,6 +64,7 @@ class AdminPage(AdminIndexView):
                 return self.render("admin/index.html", errors=errors, user=session['username'])
 
             return self.render("admin/index.html", user=session['username'])
+        return redirect(url_for('admin_login'))
 
 
 admin = Admin(index_view=AdminPage(name='Home',
@@ -94,7 +97,7 @@ class LoginForm(FlaskForm):
                          'class': " m-3 p-2 bg-slate-900 border-orange-400 border-4"})
 
 
-@app.route('/')
+@app.route('/', methods=('GET', 'POST'))
 def homepage():
     return render_template('index.html')
 
@@ -145,6 +148,18 @@ def logout():
     return redirect(url_for('admin_login'))
 
 
+@app.route('/results', methods=['GET', 'POST'])
+def result_page():
+    if request.method == 'POST':
+        admn = request.form.get("admn_no")
+        student = Students.query.filter_by(admn_no=admn).first()
+        if student:
+            grade_with_div = str(student.grade)+student.div
+            grade_files = csvtools.find_with_class(grade_with_div)
+
+    return render_template('result_form.html'), 200
+
+# ! FIX
 # @app.after_request
 # def add_header(r):
 #     r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
@@ -152,8 +167,12 @@ def logout():
 #     r.headers["Expires"] = "0"
 #     r.headers['Cache-Control'] = 'public, max-age=0'
 #     return r
+
+
 if __name__ == '__main__':
-    app.app_context().push()
-    if not os.path.exists(f'./instance/{db_name}'):
+    app.app_context().push()  # pushes app context for db
+    if not os.path.exists(f'./instance/{db_name}.db'):
+        print(
+            '\033[0;33mDatabase of students does not exist. Moving on to create it.\033[0;0m')
         db.create_all()
     app.run(debug=True)

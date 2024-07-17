@@ -157,7 +157,9 @@ cython_debug/
 # node
 node_modules/
 
-# databases
+# output folder
+outputs/
+# databases and records
 *.db
 *.csv
 # PyCharm
