@@ -52,7 +52,7 @@ def set_variables(data: dict, template: Document) -> None:
                     paragraph.text = paragraph.text.replace(i, data[i])
 
     for key, value in data.items():
-        if not i.startswith('$T'):
+        if not key.startswith('$T'):
             for table in template.tables:
                 for row in table.rows:
                     for cell in row.cells:

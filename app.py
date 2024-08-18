@@ -58,8 +58,8 @@ class AdminPage(AdminIndexView):
                     path = f'./records/csv/{file.filename}'
                     file.save(path)
                     if os.path.exists(path):
-                        errors = '''The file already exists in storage. 
-                            Rename the file to be uploaded and try again. 
+                        errors = '''The file already exists in storage.
+                            Rename the file to be uploaded and try again.
                             If you wish to delete the existing file, request its removal at <url>.'''
                 return self.render("admin/index.html", errors=errors, user=session['username'])
 
@@ -153,10 +153,13 @@ def result_page():
     if request.method == 'POST':
         admn = request.form.get("admn_no")
         student = Students.query.filter_by(admn_no=admn).first()
+        print('[GET RESULT]', student.name, student.admn_no)
         if student:
             grade_with_div = str(student.grade)+student.div
             grade_files = csvtools.find_with_class(grade_with_div)
-
+            report_data = csvtools.get_data(grade_files, student)
+            print(report_data)
+            docxgen.produce_report(report_data, supress_errors=True)
     return render_template('result_form.html'), 200
 
 # ! FIX
