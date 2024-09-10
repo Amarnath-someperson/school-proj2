@@ -77,7 +77,7 @@ def get_data(file_names: list | tuple, student: Students) -> dict:
                         
                         
             processed_data['${PERCENTAGE}'] = str(percent_sum/len(subject_totals))
-            processed_data['${ACAD_SESSION}'] = file_name[3:5] + file_name[5:7]
+            processed_data['${ACAD_SESSION}'] = file_name[3:5] + '-' + file_name[5:7]
             processed_data['${EXAM_NAME}'] = file_name[7:10]
             processed_data_list.append(processed_data)
 
