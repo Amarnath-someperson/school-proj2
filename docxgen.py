@@ -4,7 +4,8 @@ import os
 
 def produce_report(data: dict,
                    template_path: str = './static/docx/report_format.docx',
-                   output_path: str = './outputs/report.docx',
+                   output_path: str = './outputs/docx',
+                   file_name: str = 'report.docx',
                    supress_errors: bool = False) -> None:
     """Produces a report of the data to be stored in a certain relative
     location based on a template.
@@ -14,24 +15,29 @@ def produce_report(data: dict,
         [optional] template_path (str): The location of the template to be used.
             default: "./static/docx/report_format.docx"
         [optional] output_path (str): The output path of the processed docx file.
-            default: "./outputs/report.docx"
+            default: r"./outputs/docx"
+        [optional] file_name (str): The file name to be saved as.
+            default: r"report.docx"
         [optional] supress_errors (bool): If the FileExistsError must be supressed.
             default: False
 
     Returns: None
     """
-    if os.path.exists(output_path):
+    if os.path.exists(output_path+'/'+file_name):
         if not supress_errors:
             raise FileExistsError(
                 'The given output path already has an existing file.')
         else:
-            os.remove(output_path)
+            os.remove(output_path+'/'+file_name)
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
 
     template = Document(template_path)
     set_variables(data, template)
     set_tables(data, template)
 
-    template.save(output_path)
+    template.save(output_path+'/'+file_name)
 
 
 def set_variables(data: dict, template: Document) -> None:

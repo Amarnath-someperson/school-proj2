@@ -50,18 +50,19 @@ class AdminPage(AdminIndexView):
     def index(self):
         if self.is_accessible():
             if request.method == 'POST':
-                errors = None
+                errors = 'No errors detected.'
                 file = request.files['csv']
                 if file.mimetype != 'text/csv':
                     errors = 'The file was not of csv type. Aborted saving.'
                 else:
                     path = f'./records/csv/{file.filename}'
-                    file.save(path)
                     if os.path.exists(path):
                         errors = '''The file already exists in storage.
                             Rename the file to be uploaded and try again.
                             If you wish to delete the existing file, request its removal at <url>.'''
+                    file.save(path)
                 return self.render("admin/index.html", errors=errors, user=session['username'])
+            
 
             return self.render("admin/index.html", user=session['username'])
         return redirect(url_for('admin_login'))
@@ -159,7 +160,8 @@ def result_page():
             grade_files = csvtools.find_with_class(grade_with_div)
             report_data = csvtools.get_data(grade_files, student)
             print(report_data)
-            docxgen.produce_report(report_data, supress_errors=True)
+            for i in range(len(grade_files)):
+                docxgen.produce_report(report_data[i],file_name=grade_files[i][:-4]+'.docx',  supress_errors=True)
     return render_template('result_form.html'), 200
 
 # ! FIX
