@@ -53,14 +53,16 @@ class AdminPage(AdminIndexView):
                 errors = 'No errors detected.'
                 file = request.files['csv']
                 if file.mimetype != 'text/csv':
-                    errors = 'The file was not of csv type. Aborted saving.'
+                    errors = f'''Expected a "csv" file, got "{file.mimetype}" instead. 
+                        Are you sure you have selected the correct file? Aborted upload.'''
                 else:
                     path = f'./records/csv/{file.filename}'
                     if os.path.exists(path):
                         errors = '''The file already exists in storage.
                             Rename the file to be uploaded and try again.
                             If you wish to delete the existing file, request its removal at <url>.'''
-                    file.save(path)
+                    else:
+                        file.save(path)
                 return self.render("admin/index.html", errors=errors, user=session['username'])
             
 
