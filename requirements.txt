@@ -1,8 +1,10 @@
 Flask==3.0.3
-Flask_Admin==1.6.1
-Flask_Bcrypt==1.0.1
-flask_sqlalchemy==3.1.1
-flask_wtf==1.2.1
-pandas==2.2.2
-python_bcrypt==0.3.2
+Flask-Admin==1.6.1
+Flask-Bcrypt==1.0.1
+flask-sqlalchemy==3.1.1
+flask-wtf==1.2.1
+pandas==2.2.3
+bcrypt==4.2.0
 WTForms==3.1.2
+python-docx==1.1.2
+pyception==0.1.1

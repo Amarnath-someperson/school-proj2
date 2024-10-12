@@ -5,3 +5,4 @@ run `pip install -r requirements.txt` if u need to install the modules.
 run `python register_user.py` first time.
 
 details on `records` drectory.
+`docker run -p 8000:8000 school-flask`

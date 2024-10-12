@@ -12,16 +12,16 @@ def produce_report(data: dict,
 
     Args:
         data (dict): The data to be replaced in the docx template.
-        [optional] template_path (str): The location of the template to be used.
+        template_path (str): The location of the template to be used.
             default: "./static/docx/report_format.docx"
-        [optional] output_path (str): The output path of the processed docx file.
+        output_path (str): The output path of the processed docx file.
             default: r"./outputs/docx"
-        [optional] file_name (str): The file name to be saved as.
+        file_name (str): The file name to be saved as.
             default: r"report.docx"
-        [optional] supress_errors (bool): If the FileExistsError must be supressed.
+        supress_errors (bool): If the FileExistsError must be supressed.
             default: False
 
-    Returns: None
+    Returns: No return value.
     """
     if os.path.exists(output_path+'/'+file_name):
         if not supress_errors:
@@ -48,7 +48,7 @@ def set_variables(data: dict, template: Document) -> None:
         data (dict): Values and keys.
         template (docx.Document): The docx template to replace in.
 
-    Returns: None
+    Returns: No return value.
     """
 
     for i in data:
@@ -100,15 +100,7 @@ def set_tables(data: dict, template: Document):
                         paragraph._element), table._element)
 
 
-def calc_perc(numbers: list | tuple, ):
-    pass
-
-
-def calc_grade(grading: list | tuple):
-    pass
-
-
-# ! REMOVE
+# FOR TESTING PURPOSES
 if __name__ == '__main__':
     produce_report({
         '${ADMN_NO}': 'A1455', '${STUDENT_NAME}': 'John Doe',

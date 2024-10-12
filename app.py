@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect, send_from_directory
 from flask import session, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin, AdminIndexView, expose
@@ -13,6 +13,7 @@ import pandas as pd
 from models import Students
 import csvtools
 import docxgen
+import shutil
 
 db = SQLAlchemy(model_class=Students)
 
@@ -53,7 +54,7 @@ class AdminPage(AdminIndexView):
                 errors = 'No errors detected.'
                 file = request.files['csv']
                 if file.mimetype != 'text/csv':
-                    errors = f'''Expected a "csv" file, got "{file.mimetype}" instead. 
+                    errors = f'''Expected a "csv" file, got "{file.mimetype}" instead.
                         Are you sure you have selected the correct file? Aborted upload.'''
                 else:
                     path = f'./records/csv/{file.filename}'
@@ -64,7 +65,16 @@ class AdminPage(AdminIndexView):
                     else:
                         file.save(path)
                 return self.render("admin/index.html", errors=errors, user=session['username'])
-            
+
+            return self.render("admin/index.html", user=session['username'])
+        return redirect(url_for('admin_login'))
+
+    @expose('/clear', methods=('GET', 'POST'))
+    def clear(self):
+        if self.is_accessible():
+            if request.method == 'GET':
+                shutil.rmtree('./outputs/docx/')
+                return self.render("admin/cleared.html")
 
             return self.render("admin/index.html", user=session['username'])
         return redirect(url_for('admin_login'))
@@ -113,7 +123,7 @@ def admin_login():
         session['logged_in'] = False
     if not session['logged_in']:
         form = LoginForm(request.form)
-
+        errors = ''
         if form.validate_on_submit():
             username = request.form.get("username")
             pwhash = bcrypt.generate_password_hash(
@@ -134,13 +144,13 @@ def admin_login():
                         f'\033[0;42m[LOGIN SUCCESSFUL] user logged in successfully\033[0;0m')
                     return redirect('/admin')
                 else:
-                    errors = "wrong password"
+                    errors = "invalid password"
             else:
+                errors = "invalid username"
                 print('\033[0;41m[NOT FOUND] User was not found.\033[0;0m')
         else:
             print('\033[0;41m[INVALID FORM] Form was not validated.\033[0;0m')
-
-        return render_template('login.html', form=form), 200
+        return render_template('login.html', form=form, errors=errors), 200
     return render_template('logged_in.html'), 200
 
 
@@ -153,19 +163,33 @@ def logout():
 
 @app.route('/results', methods=['GET', 'POST'])
 def result_page():
+    errors = ''
     if request.method == 'POST':
         admn = request.form.get("admn_no")
         student = Students.query.filter_by(admn_no=admn).first()
-        print('[GET RESULT]', student.name, student.admn_no)
+        errors = ''
         if student:
-            grade_with_div = str(student.grade)+student.div
+            print('[GET RESULT]', student.name, student.admn_no)
+            grade_with_div = str(student.grade) + student.div
             grade_files = csvtools.find_with_class(grade_with_div)
             report_data = csvtools.get_data(grade_files, student)
-            print(report_data)
             for i in range(len(grade_files)):
-                docxgen.produce_report(report_data[i],file_name=grade_files[i][:-4]+'.docx',  supress_errors=True)
-    return render_template('result_form.html'), 200
+                grade_files[i] = grade_files[i][:-4]+'.docx'
+                docxgen.produce_report(
+                    report_data[i], output_path=f'./outputs/docx/{
+                        student.admn_no}',
+                    file_name=grade_files[i],   supress_errors=True)
 
+            return render_template('result_dashboard.html', student=student,
+                                   grade_files=grade_files, download=download)
+        else:
+            errors = "admission number not found. note that it is case sensitive."
+    return render_template('result_form.html', errors=errors), 200
+
+
+@app.route('/docx/<path:admn_no>/<path:filename>', methods=['GET', 'POST'])
+def download(admn_no, filename):
+    return send_from_directory(directory=f'outputs/docx/{admn_no}', path=filename)
 # ! FIX
 # @app.after_request
 # def add_header(r):
@@ -182,4 +206,4 @@ if __name__ == '__main__':
         print(
             '\033[0;33mDatabase of students does not exist. Moving on to create it.\033[0;0m')
         db.create_all()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8000, debug=False)
