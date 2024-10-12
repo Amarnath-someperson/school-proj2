@@ -24,6 +24,7 @@ def find_with_class(grade: str, directory: str = './records/csv') -> list:
 
 
 def get_data(file_names: list | tuple, student: Students) -> list:
+<<<<<<< HEAD
     """Returns a list with data of the student gathered from all csv files. 
     Each element in the list is a dictionary with the variables from the 
     template docx file as keys, and their replacements as values.
@@ -40,6 +41,8 @@ def get_data(file_names: list | tuple, student: Students) -> list:
     Returns:
         list: the list with all the reports of the student from records/csv.
     """
+=======
+>>>>>>> ecf81cfa56dec710e2e7904a4659625e7ba7b870
     admn_no = student.admn_no
     processed_data_list = []
     for file_name in file_names:
@@ -66,9 +69,14 @@ def get_data(file_names: list | tuple, student: Students) -> list:
                     locator_col = i
                     break
             if locator_col is None:
+<<<<<<< HEAD
                 raise RuntimeError(
                     f"A column with admission numbers was not found in file ./records/csv/{file_name}")
 
+=======
+                raise Exception(
+                    "[EXCEPTION] No column found with admission number.")
+>>>>>>> ecf81cfa56dec710e2e7904a4659625e7ba7b870
             subject_totals = []
             subjects = []
 
@@ -80,12 +88,18 @@ def get_data(file_names: list | tuple, student: Students) -> list:
                         int(split_col_name[2].removesuffix(')')))
                 except Exception as e:
                     raise e
+<<<<<<< HEAD
 
             processed_data['$T{SCHOLASTIC_AREAS_TABLE}']['Subject'] = subjects
 
             # sum of all the percentages obtained by the student, for average calc.
             percent_sum = 0
 
+=======
+            processed_data['$T{SCHOLASTIC_AREAS_TABLE}']['Subject'] = subjects
+            # sum of all the percentages obtained by the student, for average calc.
+            percent_sum = 0
+>>>>>>> ecf81cfa56dec710e2e7904a4659625e7ba7b870
             for row in data:
                 if row == []:
                     continue  # for extra rows with no data
@@ -94,6 +108,11 @@ def get_data(file_names: list | tuple, student: Students) -> list:
                         mark = row[i]
                         processed_data['$T{SCHOLASTIC_AREAS_TABLE}']['Mark'].append(
                             mark)
+<<<<<<< HEAD
+=======
+                        print(i, locator_col)
+                        print(subject_totals)
+>>>>>>> ecf81cfa56dec710e2e7904a4659625e7ba7b870
                         percent = int(mark)/subject_totals[i-locator_col-1]*100
                         percent_sum += percent
                         processed_data['$T{SCHOLASTIC_AREAS_TABLE}']['Percentage (%)'].append(
@@ -114,5 +133,9 @@ def get_data(file_names: list | tuple, student: Students) -> list:
                 processed_data['$T{SCHOLASTIC_AREAS_TABLE}']['Grade'] = na_list
                 processed_data['$T{SCHOLASTIC_AREAS_TABLE}']['Percentage (%)'] = na_list
             processed_data_list.append(processed_data)
+<<<<<<< HEAD
 
     return processed_data_list
+=======
+        return processed_data_list
+>>>>>>> ecf81cfa56dec710e2e7904a4659625e7ba7b870
