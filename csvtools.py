@@ -94,7 +94,7 @@ def get_data(file_names: list | tuple, student: Students) -> list:
                         mark = row[i]
                         processed_data['$T{SCHOLASTIC_AREAS_TABLE}']['Mark'].append(
                             mark)
-                        percent = int(mark)/subject_totals[i-locator_col-1]*100
+                        percent = eval(mark)/subject_totals[i-locator_col-1]*100
                         percent_sum += percent
                         processed_data['$T{SCHOLASTIC_AREAS_TABLE}']['Percentage (%)'].append(
                             str(percent))
