@@ -18,7 +18,7 @@ def find_with_class(grade: str, directory: str = './records/csv') -> list:
     grade = grade.lower()
 
     for file_name in os.listdir(directory):
-        if file_name.lower().startswith(grade):
+        if file_name.lower().startswith(grade) or file_name.lower().startswith('0'+grade):
             files.append(file_name)
     return files
 
